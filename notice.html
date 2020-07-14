@@ -1,0 +1,142 @@
+<template>
+    <div>
+      <rc-dialog
+        :visible.sync="currentVisible"
+        :attr="attr"
+        title="直播间公告"
+        class="rc-dialog-notice"
+        width="375px"
+        confirm-button-text="完成"
+        @confirm="showNoticeConfirm"
+      >
+        <el-input v-model="notice.noticeContent" placeholder="请输入公告" type="textarea" />
+      </rc-dialog>
+      <PublishNotice ref="publishNotice" :visible.sync="notice.publishVisible" :content="notice.noticeContent"/>
+      <ClearNotice :visible.sync="notice.clearNoticeVisible"/>
+      <!-- <rc-dialog
+        :visible.sync="notice.publishVisible"
+        :attr="attr1"
+        class="rc-dialog-publish"
+        width="254px"
+        confirm-button-text="发布"
+        @confirm="publishNoticeConfirm"
+        @cancel="notice.publishVisible = false; $emit('complishShowNotice')"
+      >
+        <p>该直播公告全体用户可见,是否发布?</p>
+      </rc-dialog> -->
+      <!-- <rc-dialog
+        :visible.sync="notice.clearNoticeVisible"
+        :attr="attr1"
+        class="rc-dialog-clear"
+        width="254px"
+        confirm-button-text="发布"
+        @confirm="clearNoticeConfirm"
+        @cancel="notice.clearNoticeVisible = false; $emit('complishShowNotice')"
+      >
+        <p>确定清空直播公告?</p>
+      </rc-dialog> -->
+    </div>
+  </template>
+  <script>
+    import DialogMixin from '@/mixins/dialog.mixin'
+    export default {
+      components: {
+        PublishNotice: () => import('../../components/publish.notice'),
+        ClearNotice: () => import('../../components/clear.notice')
+      },
+      mixins: [DialogMixin],
+      data () {
+        return {
+          // 直播间公告
+          notice: {
+            noticeContent: '',
+            publishVisible: false,
+            clearNoticeVisible: false
+          },
+          attr: {
+            'show-close': false,
+            'close-on-click-modal': false,
+            'top': '151px'
+          },
+        }
+      },
+      computed: {
+        // 发布内容
+        // getNoticeContent () {
+        // }
+      },
+      methods: {
+        // 直播公告弹窗确认
+        showNoticeConfirm () {
+          if (this.notice.noticeContent === '') {
+            this.notice.clearNoticeVisible = true
+          } else {
+            this.notice.publishVisible = true
+          }
+        },
+        // 发布弹窗确认
+        publishNoticeConfirm () {
+          this.notice.publishVisible = false
+          this.$emit('complishShowNotice')
+        },
+        // 清空弹窗确认
+        clearNoticeConfirm () {
+          this.notice.clearNoticeVisible = false
+          this.$emit('complishShowNotice')
+        }
+      }
+    }
+  </script>
+  
+  <style lang="scss">
+  @mixin common {
+    p {
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 500;
+      color: rgba(0, 0, 0, 0.78);
+      text-align: center;
+    }
+  
+    .el-dialog {
+      border-radius: 8px;
+    }
+  
+    .el-button {
+      padding: 7px 31px;
+      height: 35px;
+      border-radius: 18px;
+    }
+  }
+  
+  @include b(dialog-notice) {
+    @include common();
+  
+    .el-dialog__header {
+      padding: 0;
+      border-top-left-radius: 8px;
+      border-top-right-radius: 8px;
+      background: #f4f8fc;
+    }
+  
+    .el-dialog__title {
+      display: block;
+      padding: 12px 20px;
+      font-size: 14px;
+    }
+  
+    .el-textarea__inner {
+      font-size: 14px;
+      height: 100px;
+      padding: 16px 20px;
+      border: 0;
+    }
+  
+    .el-dialog__body {
+      padding: 0;
+      background: #fff;
+    }
+  }
+  
+  </style>
+  

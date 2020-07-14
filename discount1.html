@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- <style>
+        .discount {
+            border-radius: 5px;
+            width: 300px;
+            height: 400px;
+            background: paleturquoise;
+            display: flex;
+        }
+
+        #top {
+            text-align: center;
+        }
+
+        #bottom {}
+    </style> -->
+    <style>
+        #modal {}
+
+        p {
+            margin: 0;
+            padding: 0;
+        }
+
+        .top-box {
+            width: 100%;
+            height: 200px;
+            background: red;
+            position: relative;
+            margin-bottom: 20px;
+            border-radius: 4px 4px 0 0;
+        }
+
+        .bottom-box {
+            width: 100%;
+            height: 100px;
+            background: paleturquoise;
+            position: relative;
+            border-radius: 0 0 4px 4px;
+            /* border-top: black dashed 1px; */
+        }
+
+        .top-box p,
+        .bottom-box p {
+            width: calc(100% - 20px);
+            height: 10px;
+            position: absolute;
+            left: 10px;
+        }
+
+        .top-box p {
+            background: red;
+            bottom: -10px;
+        }
+
+        .bottom-box p {
+            background: paleturquoise;
+            top: -10px;
+        }
+
+        .top-box p::before,
+        .bottom-box p::before {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            left: -10px;
+        }
+
+        .top-box p::after,
+        .bottom-box p::after {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            right: -10px;
+        }
+
+        /* background: radial-gradient(center, shape, size, start-color, ..., last-color); */
+        .top-box p::before {
+            background-image: radial-gradient(circle 10px at 0 100%, transparent 50px, red 50%);
+        }
+
+        .top-box p::after {
+            background-image: radial-gradient(circle 10px at 100% 100%, transparent 50px, red 50%);
+        }
+
+        .bottom-box p::before {
+            background-image: radial-gradient(circle 10px at 0 0, transparent 50px, paleturquoise 50%);
+        }
+
+        .bottom-box p::after {
+            background-image: radial-gradient(circle 20px at 100% 0, transparent 50px, red 50%);
+        }
+
+        #top,
+        #bottom {
+            position: relative;
+            height: 100px;
+            background-color: royalblue;
+            width: calc(100% - 20px);
+        }
+
+        #top::before,#bottom::before {
+            left: -10px;
+            content: '';
+            display: inline-block;
+            position: absolute;
+            width: 100px;
+            height: 100%;
+            background-image:radial-gradient(circle 10px at 0 100%, transparent 10px, burlywood 50%)
+        }
+
+        #top::after,#bottom::after{
+            right: -10px;
+            content: '';
+            display: inline-block;
+            position: absolute;
+            width: 100px;
+            height: 100%;
+            background-image:
+            radial-gradient(circle 10px at 100% 100%, transparent 10px, burlywood 50%)
+        }
+    </style>
+
+</head>
+
+<body>
+    <!-- <div class="discount">
+        <div id="top">优惠券</div>
+        <div id="bottom"></div>
+    </div> -->
+    <div id="modal">
+        <!-- <div class="mask"></div> -->
+        <div class="wrap">
+            <div class="top-box">
+                <p>111</p>
+            </div>
+            <div class="bottom-box">
+                <p>222</p>
+            </div>
+        </div>
+    </div>
+    <div id="ex">
+        <div id="top"></div>
+        <div id="bottom"></div>
+    </div>
+
+</body>
+
+</html>

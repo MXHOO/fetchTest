@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <input type="text" hidden='hidden'>
+</body>
+</html>
+<template>
+    <el-card class="rc-axb-phone">
+      <el-row class="tool-bar">
+        <el-col :span="16"> 
+        <el-select v-model="params.supplier" placeholder="请选择供应商" clearable class="tool-bar__select">
+          <el-option v-for="item in providerOptions" :key=" 'index' + item.value" :label="item.label" :value="item.value"></el-option>
+        </el-select>
+        <el-date-picker v-model="params.bill_month" type="month"  :picker-options="pickOptions" value-format="yyyy-MM" placeholder="请选择月份" class="tool-bar__data-picker"></el-date-picker>
+        <el-button @click="search" type="primary">查询</el-button>
+        </el-col>
+        <el-col  :offset="6" :span="2"> 
+          <el-button type="primary" @click="outputExcel">导出</el-button>
+        </el-col>
+      </el-row>
+      <el-table
+        ref="multipleTable"
+        :data="tableData.slice((pagination.currentPage-1)*pagination.page_size,pagination.currentPage*pagination.page_size)"
+        tooltip-effect="dark"
+        style="width: 100%; txet-align: center;"
+      >
+        <el-table-column  label="账单月份" >
+          <template slot-scope="bill_month">{{params.bill_month}}</template>
+        </el-table-column>
+        <el-table-column label="供应商">
+          <template slot-scope="supplier">{{supplierName}}</template>
+        </el-table-column>
+        <el-table-column prop="telephone" label="号码"></el-table-column>
+        <el-table-column prop="minutes" label="分钟数"></el-table-column>
+      </el-table>
+       <el-pagination
+        style="margin:10px 0; text-align:center;"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :page-sizes="pagination.page_sizes"
+        :page-size="pagination.page_size"
+        :current-page="pagination.currentPage"
+        layout="total, sizes, prev, pager, next"
+        :total="tableData.length">
+      </el-pagination>
+    </el-card>
+  </template>
+  
+  <script>
+  import { searchRecordCheck, outputRecordCheck } from '@/services/axb.service'
+  export default {
+    data() {
+      return {
+        providerOptions: [
+          {label: '华为', value: 2, name: 'HuaWei'},
+          {label: '东信', value: 5, name: 'ASEAN'}
+        ],
+        params: {
+          supplier: '',
+          bill_month: ''
+        },
+        tableData: [],
+        pagination: {
+          currentPage: 1,
+          page_sizes: [10, 20, 50, 100],
+          page_size: 10
+        },
+        pickOptions: {
+          disabledDate (time) {
+            return (time.getTime() < new Date('2017-01-01').getTime()) || (time.getTime() > new Date().getTime())
+          }
+        }
+      }
+    },
+    computed: {
+      supplierName: function () {
+        let supplier = this.params.supplier
+        return supplier === '' ? '' : (supplier === 2 ? '华为' : '东信')
+      }
+    },
+    methods: {
+      handleSizeChange(val) {
+        this.pagination.page_size = val
+      },
+      handleCurrentChange(val) {
+        this.pagination.currentPage = val
+      },
+      async search () {
+        let params = this.params
+        if (params.supplier === '' || params.bill_month === '') {
+          this.$notify.warning({
+            message: '请选择供应商或月份'
+          })
+        } else {
+          let res = await searchRecordCheck(params)
+          res = Array.from(res.data)
+          if (res.length !== 0) {
+            let dataList = res.map(currentValue => ({
+              minutes: currentValue.min_duration,
+              telephone: currentValue.mid_number
+            }))
+            this.tableData = dataList
+          } else {
+            this.tableData = []
+          }
+        }
+      },
+      async outputExcel() {
+        let params = this.params
+        await outputRecordCheck(params)
+      }
+    }
+  }
+  </script>
+  <style lang="scss" scoped>
+  .tool-bar {
+    margin-bottom: 10px;
+  
+    .tool-bar__select {
+      margin-right: 10px;
+    }
+    
+    .tool-bar__data-picker {
+      margin-right: 10px;
+    }
+  }
+  </style>
+
+
+  <!-- <el-card class="rc-axb-phone">
+    <el-row class="tool-bar ">
+      <el-col :span="16"> 
+        <rc-select v-model="searchParams.supplier" size="small" placeholder="请选择供应商" clearable class="tool-bar__select">
+          <el-option v-for="(item,index) in providerOptions" :key="index + '-' + item.value" :label="item.label" :value="item.value"></el-option>
+        </rc-select>
+        <el-date-picker v-model="searchParams.bill_month" type="month"  :picker-options="pickOptions" value-format="yyyy-MM" placeholder="请选择月份" class="tool-bar__data-picker"></el-date-picker>
+        <el-button @click="search"  class="el-button el-button--primary el-button--small">查询</el-button>
+      </el-col>
+      <el-col  :offset="6" :span="2"> 
+        <el-button  @click="outputExcel" class="el-button el-button--primary el-button--small">导出</el-button>
+      </el-col>
+    </el-row>
+    <el-table
+      ref="multipleTable"
+      :data="tableData.slice((pagination.currentPage-1)*pagination.page_size,pagination.currentPage*pagination.page_size)"
+      tooltip-effect="dark"
+      style="width: 100%; txet-align: center;"
+    >
+      <el-table-column label="账单月份" :formatter="()=> searchParams.bill_month">
+      </el-table-column>
+      <el-table-column label="供应商" :formatter="() => supplierName">
+      </el-table-column>
+      <el-table-column prop="mid_number" label="号码">
+      </el-table-column>
+      <el-table-column prop="min_duration" label="分钟数"></el-table-column>
+    </el-table>
+     <el-pagination
+      style="margin:10px 0; text-align:center;"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :page-sizes="pagination.page_sizes"
+      :page-size="pagination.page_size"
+      :current-page="pagination.currentPage"
+      layout="total, sizes, prev, pager, next"
+      :total="tableData.length">
+    </el-pagination>
+  </el-card> -->
+
+
+
+  <template>
+    <el-card class="rc-axb-phone">
+      <rc-table bg-header :columns="COLUMNS" :list ='tableData' ref="table" :page='page'>
+        <template slot="form">
+          <div class="rc-table__search">
+            <div class="rc-table__form">
+              <el-form-item>
+                <rc-select v-model="searchParams.supplier" size="small" placeholder="请选择供应商" clearable class="tool-bar__select">
+                  <el-option v-for="(item,index) in providerOptions" :key="index + '-' + item.value" :label="item.label" :value="item.value"></el-option>
+                </rc-select>
+              </el-form-item>
+              <el-form-item>
+                <el-date-picker v-model="searchParams.bill_month" type="month"  :picker-options="pickOptions" value-format="yyyy-MM" placeholder="请选择月份" class="tool-bar__data-picker"></el-date-picker>
+              </el-form-item>
+              <el-form-item>
+                <el-button @click="search"  class="el-button el-button--primary el-button--small">查询</el-button>
+              </el-form-item>
+              <el-form-item>
+                <el-button  @click="outputExcel" class="el-button el-button--primary el-button--small">导出</el-button>
+              </el-form-item>            
+            </div>
+          </div>
+        </template>
+      </rc-table>
+    </el-card>
+  </template>
+  
+  <script>
+  import { searchRecordCheck, outputRecordCheck } from '@/services/axb.service'
+  const COLUMNS = [
+    {
+      prop: 'bill_month',
+      label: '账单月份',
+      align: 'center'
+    },
+    {
+      prop: 'supplier',
+      label: '供应商',
+      align: 'center'
+    },
+    {
+      prop: 'mid_number',
+      label: '号码',
+      align: 'center'
+    },
+    {
+      prop: 'min_duration',
+      label: '分钟数',
+      align: 'center'
+    }
+  ]
+  export default {
+    data() {
+      return {
+        page: {
+          total: 10
+        },
+        COLUMNS: COLUMNS,
+        providerOptions: [
+          {label: '华为', value: 2, name: 'HuaWei'},
+          {label: '东信', value: 5, name: 'ASEAN'}
+        ],
+        searchParams: {
+          supplier: '',
+          bill_month: ''
+        },
+        supplierName: '',
+        tableData: [],
+        pagination: {
+          currentPage: 1,
+          page_sizes: [10, 20, 50, 100],
+          page_size: 10
+        },
+        pickOptions: {
+          disabledDate (time) {
+            return (time.getTime() < new Date('2017-01-01').getTime()) || (time.getTime() > new Date().getTime())
+          }
+        }
+      }
+    },
+    methods: {
+      handleSizeChange(val) {
+        this.pagination.page_size = val
+      },
+      handleCurrentChange(val) {
+        this.pagination.currentPage = val
+      },
+      getSupplierName(supplierValue) {
+        this.providerOptions.forEach(e => {
+          if (e.value === supplierValue) {
+            this.supplierName = e.label
+          }
+        })
+      },
+      async search () {
+        let params = this.searchParams
+        if (params.supplier === '' || params.bill_month === '') {
+          this.$notify.warning({
+            message: '请选择供应商或月份'
+          })
+        } else {
+          let res = await searchRecordCheck(params)
+          this.getSupplierName(params.supplier)
+          this.tableData = res.data.map((currentValue) => ({
+            supplier: this.supplierName,
+            bill_month: this.searchParams.bill_month,
+            mid_number: currentValue.mid_number,
+            min_duration: currentValue.min_duration
+          }))
+        }
+        const table = this.$refs.table
+        table.list = this.tableData
+        table.page.total = this.tableData.length
+        console.log(table)
+  
+      },
+      async outputExcel() {
+        let params = this.searchParams
+        await outputRecordCheck(params)
+      }
+    }
+  }
+  </script>
+  <style lang="scss" scoped>
+  .tool-bar {
+    margin-bottom: 10px;
+  
+    .tool-bar__select {
+      margin-right: 10px;
+    }
+    
+    .tool-bar__data-picker {
+      margin-right: 10px;
+    }
+  }
+  </style>
+  
+  

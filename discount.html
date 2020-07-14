@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>优惠券</title>
+    <style>
+        .app {
+            /* padding: 20rpx 40rpx; */
+            padding: 20rpx;
+            background: #eee;
+        }
+
+        .wrapper {
+            margin: 0 auto;
+            width: 100%;
+            display: flex;
+            background: linear-gradient(-90deg, rgba(250, 173, 82, 1), rgba(254, 50, 103, 1));
+            /*实现颜色渐变 */
+        }
+
+        /*前半部分样式*/
+        .content {
+            position: relative;
+            flex: 1;
+            padding: 20rpx 30rpx;
+            text-align: center;
+        }
+
+        /*后半部分样式*/
+        .tip {
+            position: relative;
+            padding: 50rpx 30rpx;
+            flex: 0 0 200rpx;
+            text-align: center;
+        }
+
+        /*中间竖直虚线样式*/
+        .split-line {
+            position: relative;
+            flex: 0 0 0;
+            margin: 0 10rpx 0 6rpx;
+            border-left: 4rpx dashed #eee;
+        }
+
+        /*给虚线加两个伪类，基本样式如下*/
+        .split-line:before,
+        .split-line:after {
+            content: '';
+            position: absolute;
+            width: 32rpx;
+            height: 16rpx;
+            background: #eee;
+            left: -18rpx;
+            z-index: 1;
+        }
+
+        /*给前半部分加两个伪类，基本样式如下*/
+        .content:before,
+        .content:after {
+            content: '';
+            position: absolute;
+            width: 32rpx;
+            height: 16rpx;
+            background: #eee;
+            left: -16rpx;
+            z-index: 1;
+        }
+
+        /*给前半部分加两个伪类，基本样式如下*/
+        .tip:before,
+        .tip:after {
+            content: '';
+            position: absolute;
+            width: 32rpx;
+            height: 16rpx;
+            background: #eee;
+            right: -16rpx;
+            z-index: 1;
+        }
+
+        /*几个伪类化成的圆弧的样式以及位置（置于顶部）我把它放在一起了*/
+        .content:before,
+        .tip:before,
+        .split-line:before {
+            border-radius: 0 0 16rpx 16rpx;
+            top: 0;
+        }
+
+        /*几个伪类化成的圆弧的样式以及位置（置于底部）我把它放在一起了*/
+        .content:after,
+        .tip:after,
+        .split-line:after {
+            border-radius: 16rpx 16rpx 0 0;
+            bottom: 0;
+        }
+
+        .money {
+            font-size: 110rpx;
+            color: #eee;
+        }
+
+        .money text {
+            font-size: 50rpx;
+            padding-right: 20rpx;
+        }
+
+        .title {
+            color: #eee;
+            font-size: 30rpx;
+        }
+
+        .conditions {
+            color: #eee;
+            font-size: 30rpx;
+            padding: 15rpx;
+        }
+
+        .useNow {
+            color: rgba(254, 50, 103, 1);
+            font-size: 30rpx;
+            border-radius: 50rpx;
+            border-style: none;
+        }
+
+        .co {
+            padding-top: 10rpx;
+        }
+
+        .co .co_w {
+            width: 64rpx;
+            height: 1rpx;
+            background: #fff;
+            margin-left: 60rpx;
+            margin-bottom: -20rpx;
+        }
+
+        .co .co_l {
+            width: 64rpx;
+            height: 1rpx;
+            background: #fff;
+            margin-left: 260rpx;
+            margin-top: -15rpx;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app">
+        <div class="wrapper">
+            <div class="content">
+                <div class="money">
+                    <text>¥</text>50
+                </div>
+                <div class='co'>
+                    <div class='co_w'>
+                        </div>
+                        <div class="title">
+                            优惠券
+                        </div>
+                        <div class='co_l'>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="split-line"></div>
+                    <div class="tip">
+                        <div class="conditions">
+                            满500元使用
+                        </div>
+                        <button class="useNow" bindtap="">
+                            立即使用
+                        </button>
+                    </div>
+                </div>
+            </div>
+</body>
+
+</html>
+
+
+// 弹框数据
+// outerVisible: false,
+// innerVisible: false,
+// centerDialogVisible: false,
+// currentVisible: false,
+// innerCurrentVisible: false,
+// outerTitle: '外层弹框',
+// innerTitle: '内层弹框',
+// onEvent: {
+//   close: this.onClose.bind(this),
+//   open: this.onOpen.bind(this)
+// }
+// 发布公告
+
+    <!-- <el-button type="primary" @click="outerVisible = true">点击打开外层 Dialog</el-button>
+    <el-dialog width="40%" title="外层 Dialog" :visible.sync="outerVisible" :modal-append-to-body="false" append-to-body>
+    <el-dialog
+    :modal-append-to-body="false"
+      width="20%"
+      title="内层 Dialog"
+      :visible.sync="innerVisible"
+      append-to-body>
+      <div slot="footer">
+        <el-button @click="innerVisible = false">取 消</el-button>
+      </div>
+    </el-dialog>
+    <div slot="footer" class="dialog-footer">
+      <el-button @click="outerVisible = false">取 消</el-button>
+      <el-button type="primary" @click="innerVisible = true">打开内层 Dialog</el-button>
+    </div>
+  </el-dialog> -->
+  <!-- <el-button type="text" @click="centerDialogVisible = true">点击打开 Dialog</el-button>
+  <el-dialog
+    :modal-append-to-body="false"
+    title="提示"
+    :visible.sync="centerDialogVisible"
+    width="30%"
+    center>
+    <div slot="title" style="background:red; padding:20px;">
+      直播间公告
+    </div>
+    <span>需要注意的是内容是默认不居中的</span>
+    <span slot="footer" class="dialog-footer">
+      <el-button @click="centerDialogVisible = false">取 消</el-button>
+      <el-button type="primary" @click="centerDialogVisible = false">确 定</el-button>
+    </span>
+  </el-dialog>
+  <el-button @click="showDialog"  @keydown="alert('hello')">测试一下rc-dialog</el-button>
+  <rc-dialog :visible="currentVisible" :on="onEvent" @close="onSave" :title="outerTitle">
+    <el-input placeholder="请将优惠券URL复制在该输入框">
+    </el-input>
+  </rc-dialog>
+  <rc-dialog width="300px" append-to-body :visible="innerCurrentVisible" :title="innerTitle">
+    <div slot="footer" class="dialog-footer">
+          <el-button size="small" type="primary">是不是确定按钮</el-button>
+          <el-button size="small" >是不是取消按钮</el-button>
+        </div>
+  </rc-dialog> -->
